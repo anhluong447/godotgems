@@ -16,7 +16,7 @@ func _ready() -> void:
 	visual.setup(sprite_sheet)
 	visual.set_facing(face_direction)
 	visual.update_anim(Vector2.ZERO, 0.0)
-	interactable.prompt = "Nói chuyện"
+	interactable.prompt = "PROMPT_TALK"
 	interactable.interacted.connect(_on_interacted)
 
 

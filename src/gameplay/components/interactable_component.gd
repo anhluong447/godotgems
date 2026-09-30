@@ -4,8 +4,8 @@ extends Area2D
 
 signal interacted(by: Node2D)
 
-## Text shown in the prompt, e.g. "Mở rương".
-@export var prompt: String = "Tương tác"
+## Translation key shown in the prompt, e.g. PROMPT_OPEN.
+@export var prompt: String = "PROMPT_DEFAULT"
 @export var enabled: bool = true
 ## Where the prompt appears, relative to this node.
 @export var prompt_offset: Vector2 = Vector2(0, -28)

@@ -34,11 +34,11 @@ func _on_damage_applied(target: Node2D, info: DamageInfo) -> void:
 func _on_item_collected(item_id: StringName, count: int) -> void:
 	var item := Registry.item(item_id)
 	var item_name := item.display_name if item != null else String(item_id)
-	EventBus.toast_requested.emit("+%d %s" % [count, item_name])
+	EventBus.toast_requested.emit(tr("TOAST_ITEM") % [count, item_name])
 
 
 func _on_leveled(character_id: StringName, level: int) -> void:
 	var def := Registry.character(character_id)
 	var who := def.display_name if def != null else String(character_id)
 	AudioService.play_sfx(&"level_up", 0.0)
-	EventBus.toast_requested.emit("%s lên cấp %d!" % [who, level])
+	EventBus.toast_requested.emit(tr("TOAST_LEVEL_UP") % [who, level])

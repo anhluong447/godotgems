@@ -26,7 +26,7 @@ shape = SubResource("RectangleShape2D_body")
 
 [node name="Interactable" type="Area2D" parent="."]
 script = ExtResource("4_inter")
-prompt = "Mở rương"
+prompt = "PROMPT_OPEN"
 
 [node name="Shape" type="CollisionShape2D" parent="Interactable"]
 position = Vector2(0, -4)

@@ -1,0 +1,53 @@
+keys,vi,en
+UI_GAME_TITLE,TRƯỜNG XUÂN,TRUONG XUAN
+UI_GAME_SUBTITLE,Anh hùng là người được vỗ tay hay là người ở lại?,Is a hero the one who is applauded or the one who stays?
+UI_CONTINUE,Tiếp tục,Continue
+UI_NEW_GAME,Chơi mới,New game
+UI_RESUME,Tiếp tục,Resume
+UI_SAVE,Lưu game,Save
+UI_LOAD,Tải game,Load
+UI_SETTINGS,Cài đặt,Settings
+UI_INVENTORY,Túi đồ,Inventory
+UI_QUIT,Thoát,Quit
+UI_TO_TITLE,Về màn hình chính,Main menu
+UI_BACK,Quay lại,Back
+UI_USE,Dùng,Use
+UI_PAUSE_TITLE,Tạm dừng,Paused
+UI_EMPTY_INVENTORY,Túi đồ trống.,Inventory is empty.
+UI_VOL_MASTER,Âm lượng tổng,Master volume
+UI_VOL_MUSIC,Nhạc,Music
+UI_VOL_SFX,Hiệu ứng,Sound effects
+UI_SCREEN_SHAKE,Rung màn hình,Screen shake
+UI_TEXT_SPEED,Tốc độ chữ,Text speed
+UI_FULLSCREEN,Toàn màn hình,Fullscreen
+UI_GENTLE_MODE,Chế độ Nhẹ Tay,Gentle mode
+UI_LANGUAGE,Ngôn ngữ,Language
+UI_SAVED_SLOT,Đã lưu vào %s,Saved to %s
+UI_SAVE_FAILED,Lưu thất bại!,Save failed!
+UI_LOAD_FAILED,Không tải được bản lưu.,Could not load the save.
+UI_SLOT,Ô %d,Slot %d
+UI_AUTOSAVE,Lưu nhanh,Quick save
+UI_SLOT_EMPTY,%s — trống,%s — empty
+UI_SLOT_INFO,%s — %s — %s,%s — %s — %s
+UI_CHOOSE_SAVE_SLOT,Chọn ô để lưu,Choose a slot to save
+UI_CHOOSE_LOAD_SLOT,Chọn bản lưu,Choose a save
+UI_CW_TITLE,Cảnh báo nội dung,Content warning
+UI_CW_BODY,"Trò chơi có những chủ đề nặng nề: bạo hành, mất mát người thân, nợ nần, cô lập và trầm cảm. Các cảnh này được viết một cách tiết chế, không mô tả trực diện. Bạn có thể bật Chế độ Nhẹ Tay để giảm chi tiết của những cảnh nặng nhất. Tuỳ chọn này có thể đổi bất cứ lúc nào trong Cài đặt.","This game deals with heavy themes: abuse, grief, debt, isolation and depression. These scenes are written with restraint and are never graphic. You can turn on Gentle mode to reduce the detail of the heaviest scenes. You can change this at any time in Settings."
+UI_CW_ACCEPT,Tôi hiểu. Tiếp tục,I understand. Continue
+HUD_LEVEL,Lv%d,Lv%d
+HUD_DOWNED,(%ds),(%ds)
+HUD_DODGE,Né,Dodge
+HUD_PROMPT,[%s] %s,[%s] %s
+PROMPT_DEFAULT,Tương tác,Interact
+PROMPT_TALK,Nói chuyện,Talk
+PROMPT_READ,Đọc,Read
+PROMPT_OPEN,Mở rương,Open
+PROMPT_ENTER,Vào,Enter
+TOAST_ITEM,+%d %s,+%d %s
+TOAST_LEVEL_UP,%s lên cấp %d!,%s reached level %d!
+TOAST_WIPE,Cả đội đã ngã... quay về điểm xuất phát.,The party has fallen... returning to the start.
+TOAST_QUICKSAVE,Đã lưu nhanh,Quick saved
+TOAST_NO_QUICKSAVE,Chưa có bản lưu nhanh,No quick save yet
+TOAST_USED_ITEM,Đã dùng %s (+%d HP),Used %s (+%d HP)
+TOAST_NO_CONSUMABLE,Không có vật phẩm hồi máu,No healing items
+TOAST_HP_FULL,Máu đã đầy,HP is already full

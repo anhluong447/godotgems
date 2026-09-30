@@ -52,8 +52,8 @@ func _build() -> void:
 	_skills_box.position = Vector2(640 - 104, 360 - 36)
 	_skills_box.add_theme_constant_override("separation", 4)
 	add_child(_skills_box)
-	for key: String in ["K", "L", "␣"]:
-		_skill_slots.append(_make_skill_slot(key))
+	for action: StringName in [&"skill_1", &"skill_2", &"dodge"]:
+		_skill_slots.append(_make_skill_slot(InputHints.key_for(action)))
 
 	_wallet = Label.new()
 	_wallet.position = Vector2(640 - 130, 6)
@@ -170,11 +170,11 @@ func _update_frames() -> void:
 		en.max_value = maxf(m.energy.maximum, 1.0)
 		en.value = m.energy.current
 		var title: Label = f["title"]
-		var text := "%d  %s  Lv%d" % [int(f["index"]) + 1, m.def.display_name, m.progression.level]
+		var text := "%d  %s  %s" % [int(f["index"]) + 1, m.def.display_name, tr("HUD_LEVEL") % m.progression.level]
 		if m.is_downed():
 			var downed := m.state_machine.current as Node
 			var left: float = downed.call("time_left") if downed.has_method("time_left") else 0.0
-			text += "  (%ds)" % ceili(left)
+			text += "  " + tr("HUD_DOWNED") % ceili(left)
 		title.text = text
 		var panel: Control = f["panel"]
 		panel.modulate = Color.WHITE if m == _leader else Color(1, 1, 1, 0.6)
@@ -201,7 +201,7 @@ func _update_skills() -> void:
 		cover.offset_top = 0.0
 		(slot["panel"] as Control).modulate = Color.WHITE if _leader.energy.can_afford(s.energy_cost) else Color(0.6, 0.6, 0.8)
 	var dodge := _skill_slots[2]
-	(dodge["label"] as Label).text = "Né"
+	(dodge["label"] as Label).text = tr("HUD_DODGE")
 	var dodge_cover: ColorRect = dodge["cover"]
 	dodge_cover.anchor_top = 1.0 - _leader.dodge_cooldown.ratio()
 	dodge_cover.offset_top = 0.0
@@ -212,7 +212,7 @@ func _update_prompt() -> void:
 		_prompt.visible = false
 		return
 	_prompt.visible = true
-	_prompt.text = "[E] %s" % _prompt_target.prompt
+	_prompt.text = tr("HUD_PROMPT") % [InputHints.key_for(&"interact"), tr(_prompt_target.prompt)]
 	# World -> screen -> HUD local; both sides include the same stretch transform, so it cancels.
 	var screen := _prompt_target.get_global_transform_with_canvas() * _prompt_target.prompt_offset
 	var local := get_global_transform_with_canvas().affine_inverse() * screen

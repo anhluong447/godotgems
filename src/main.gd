@@ -18,14 +18,14 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"quick_save"):
 		if SaveService.save_game(SaveService.AUTOSAVE_SLOT):
-			EventBus.toast_requested.emit("Đã lưu nhanh")
+			EventBus.toast_requested.emit(tr("TOAST_QUICKSAVE"))
 	elif event.is_action_pressed(&"quick_load"):
 		if not SaveService.load_game(SaveService.AUTOSAVE_SLOT):
-			EventBus.toast_requested.emit("Chưa có bản lưu nhanh")
+			EventBus.toast_requested.emit(tr("TOAST_NO_QUICKSAVE"))
 
 
 func _on_party_wiped() -> void:
-	EventBus.toast_requested.emit("Cả đội đã ngã... quay về điểm xuất phát.")
+	EventBus.toast_requested.emit(tr("TOAST_WIPE"))
 	InputGate.acquire(&"wipe")
 	await get_tree().create_timer(1.5).timeout
 	InputGate.release(&"wipe")

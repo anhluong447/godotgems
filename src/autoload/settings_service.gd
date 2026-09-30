@@ -14,7 +14,10 @@ const DEFAULTS := {
 	&"screen_shake": 1.0,
 	&"text_speed": 45.0,
 	&"gentle_mode": false,
+	&"language": "vi",
+	&"content_warning_seen": false,
 }
+const LANGUAGES: PackedStringArray = ["vi", "en"]
 
 var _values: Dictionary = DEFAULTS.duplicate()
 
@@ -22,6 +25,18 @@ var _values: Dictionary = DEFAULTS.duplicate()
 func _ready() -> void:
 	load_settings()
 	apply_all()
+	_register_debug_commands.call_deferred()
+
+
+func _register_debug_commands() -> void:
+	DebugService.register("lang", _cmd_lang, "Switch UI language", "<vi|en>")
+
+
+func _cmd_lang(args: PackedStringArray) -> String:
+	if args.is_empty() or not LANGUAGES.has(args[0]):
+		return "usage: lang <%s>" % "|".join(LANGUAGES)
+	set_value(&"language", args[0], false)
+	return "language: %s" % args[0]
 
 
 func get_value(key: StringName) -> Variant:
@@ -68,6 +83,8 @@ func _apply(key: StringName) -> void:
 			_set_bus_volume(&"SFX", float(get_value(key)))
 		&"ui_volume":
 			_set_bus_volume(&"UI", float(get_value(key)))
+		&"language":
+			TranslationServer.set_locale(str(get_value(key)))
 		&"fullscreen":
 			if DisplayServer.get_name() == "headless":
 				return

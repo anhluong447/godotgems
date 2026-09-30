@@ -23,7 +23,7 @@ shape = SubResource("RectangleShape2D_body")
 
 [node name="Interactable" type="Area2D" parent="."]
 script = ExtResource("3_inter")
-prompt = "Đọc"
+prompt = "PROMPT_READ"
 
 [node name="Shape" type="CollisionShape2D" parent="Interactable"]
 position = Vector2(0, -4)

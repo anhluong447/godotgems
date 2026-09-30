@@ -1,0 +1,90 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/entities/party/party_member.gd" id="1_member"]
+[ext_resource type="Script" path="res://src/gameplay/entities/actor_visual.gd" id="2_visual"]
+[ext_resource type="Script" path="res://src/gameplay/components/stats_component.gd" id="3_stats"]
+[ext_resource type="Script" path="res://src/gameplay/components/health_component.gd" id="4_health"]
+[ext_resource type="Script" path="res://src/gameplay/components/movement_component.gd" id="5_move"]
+[ext_resource type="Script" path="res://src/gameplay/components/hurtbox_component.gd" id="6_hurt"]
+[ext_resource type="Script" path="res://src/gameplay/components/hitbox_component.gd" id="7_hit"]
+[ext_resource type="Script" path="res://src/gameplay/abilities/ability_component.gd" id="8_abil"]
+[ext_resource type="Script" path="res://src/gameplay/components/flash_component.gd" id="9_flash"]
+[ext_resource type="Script" path="res://src/gameplay/components/state_machine.gd" id="10_sm"]
+[ext_resource type="Script" path="res://src/gameplay/entities/party/states/locomotion_state.gd" id="11_loco"]
+[ext_resource type="Script" path="res://src/gameplay/entities/party/states/ability_state.gd" id="12_abil_state"]
+[ext_resource type="Script" path="res://src/gameplay/entities/party/states/dodge_state.gd" id="13_dodge"]
+[ext_resource type="Script" path="res://src/gameplay/entities/party/states/flinch_state.gd" id="14_flinch"]
+[ext_resource type="Script" path="res://src/gameplay/entities/party/states/downed_state.gd" id="15_downed"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 5.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurt"]
+size = Vector2(14, 22)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hit"]
+size = Vector2(24, 20)
+
+[node name="PartyMember" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_member")
+
+[node name="BodyShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("2_visual")
+
+[node name="Sprite" type="Sprite2D" parent="Visual"]
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource("3_stats")
+
+[node name="Health" type="Node" parent="." node_paths=PackedStringArray("stats")]
+script = ExtResource("4_health")
+stats = NodePath("../Stats")
+
+[node name="Movement" type="Node" parent="." node_paths=PackedStringArray("body")]
+script = ExtResource("5_move")
+body = NodePath("..")
+
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health")]
+script = ExtResource("6_hurt")
+health = NodePath("../Health")
+
+[node name="Shape" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -11)
+shape = SubResource("RectangleShape2D_hurt")
+
+[node name="Hitbox" type="Area2D" parent="."]
+script = ExtResource("7_hit")
+
+[node name="Shape" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hit")
+
+[node name="Abilities" type="Node" parent="." node_paths=PackedStringArray("hitbox")]
+script = ExtResource("8_abil")
+hitbox = NodePath("../Hitbox")
+
+[node name="Flash" type="Node" parent="." node_paths=PackedStringArray("target")]
+script = ExtResource("9_flash")
+target = NodePath("../Visual/Sprite")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("10_sm")
+initial_state = NodePath("Locomotion")
+
+[node name="Locomotion" type="Node" parent="StateMachine"]
+script = ExtResource("11_loco")
+
+[node name="Ability" type="Node" parent="StateMachine"]
+script = ExtResource("12_abil_state")
+
+[node name="Dodge" type="Node" parent="StateMachine"]
+script = ExtResource("13_dodge")
+
+[node name="Flinch" type="Node" parent="StateMachine"]
+script = ExtResource("14_flinch")
+
+[node name="Downed" type="Node" parent="StateMachine"]
+script = ExtResource("15_downed")

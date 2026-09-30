@@ -14,6 +14,8 @@ var progress: Dictionary[StringName, Progression] = {}
 ## character id -> { "hp": float, "energy": float }. Captured on save, applied on load.
 var vitals: Dictionary[StringName, Dictionary] = {}
 var map_path: String = DEFAULT_MAP
+## Display name of the current map (runtime; copied into save metadata).
+var map_display_name: String = ""
 var spawn_id: StringName = DEFAULT_SPAWN
 ## Leader position captured right before saving (written by the party on EventBus.before_save).
 var saved_position: Variant = null

@@ -1,11 +1,14 @@
 class_name PauseMenu
 extends Control
-## Pause, settings, save/load. Runs while the tree is paused.
+## Pause menu: resume, inventory, save/load (slot picker), settings, back to title.
+## Runs while the tree is paused. Pages are shared widgets (InventoryPanel, SlotList, SettingsPanel).
 
-const SAVE_SLOT := 1
-
-var _root_box: VBoxContainer
-var _settings_box: VBoxContainer
+var _panel: PanelContainer
+var _title: Label
+var _root_page: VBoxContainer
+var _inventory: InventoryPanel
+var _slots: SlotList
+var _settings: SettingsPanel
 var _status: Label
 
 
@@ -17,11 +20,15 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"pause"):
-		if InputGate.reasons().has(&"console"):
-			return
+	if not event.is_action_pressed(&"pause"):
+		return
+	if InputGate.reasons().has(&"console") or InputGate.reasons().has(&"transition"):
+		return
+	if visible and not _root_page.visible:
+		_show_page(_root_page)
+	else:
 		toggle()
-		get_viewport().set_input_as_handled()
+	get_viewport().set_input_as_handled()
 
 
 func toggle() -> void:
@@ -34,8 +41,8 @@ func toggle() -> void:
 func open() -> void:
 	visible = true
 	get_tree().paused = true
-	_show_root()
 	_status.text = ""
+	_show_page(_root_page)
 	AudioService.play_ui(&"ui_confirm")
 
 
@@ -50,41 +57,39 @@ func _build() -> void:
 	dim.color = Color(0, 0, 0, 0.55)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(dim)
-	var panel := PanelContainer.new()
-	panel.position = Vector2(220, 70)
-	panel.custom_minimum_size = Vector2(200, 0)
-	add_child(panel)
+	_panel = PanelContainer.new()
+	_panel.custom_minimum_size = Vector2(220, 0)
+	add_child(_panel)
 	var outer := VBoxContainer.new()
 	outer.add_theme_constant_override("separation", 4)
-	panel.add_child(outer)
-	var title := Label.new()
-	title.text = "Tạm dừng"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 14)
-	outer.add_child(title)
+	_panel.add_child(outer)
+	_title = Label.new()
+	_title.text = "UI_PAUSE_TITLE"
+	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title.add_theme_font_size_override("font_size", 14)
+	outer.add_child(_title)
 
-	_root_box = VBoxContainer.new()
-	_root_box.add_theme_constant_override("separation", 3)
-	outer.add_child(_root_box)
-	_add_button(_root_box, "Tiếp tục", close)
-	_add_button(_root_box, "Lưu game", _on_save)
-	_add_button(_root_box, "Tải game", _on_load)
-	_add_button(_root_box, "Cài đặt", _show_settings)
-	_add_button(_root_box, "Thoát", func() -> void: get_tree().quit())
+	_root_page = VBoxContainer.new()
+	_root_page.add_theme_constant_override("separation", 3)
+	outer.add_child(_root_page)
+	_add_button(_root_page, "UI_RESUME", close)
+	_add_button(_root_page, "UI_INVENTORY", func() -> void: _show_page(_inventory))
+	_add_button(_root_page, "UI_SAVE", func() -> void: _show_page(_slots, SlotList.Mode.SAVE))
+	_add_button(_root_page, "UI_LOAD", func() -> void: _show_page(_slots, SlotList.Mode.LOAD))
+	_add_button(_root_page, "UI_SETTINGS", func() -> void: _show_page(_settings))
+	_add_button(_root_page, "UI_TO_TITLE", _on_to_title)
+	_add_button(_root_page, "UI_QUIT", func() -> void: get_tree().quit())
 
-	_settings_box = VBoxContainer.new()
-	_settings_box.add_theme_constant_override("separation", 3)
-	outer.add_child(_settings_box)
-	_add_slider(_settings_box, "Âm lượng tổng", &"master_volume")
-	_add_slider(_settings_box, "Nhạc", &"music_volume")
-	_add_slider(_settings_box, "Hiệu ứng", &"sfx_volume")
-	_add_slider(_settings_box, "Rung màn hình", &"screen_shake")
-	var fs := CheckBox.new()
-	fs.text = "Toàn màn hình"
-	fs.button_pressed = bool(SettingsService.get_value(&"fullscreen"))
-	fs.toggled.connect(func(on: bool) -> void: SettingsService.set_value(&"fullscreen", on))
-	_settings_box.add_child(fs)
-	_add_button(_settings_box, "Quay lại", _show_root)
+	_inventory = InventoryPanel.new()
+	_inventory.back_requested.connect(func() -> void: _show_page(_root_page))
+	outer.add_child(_inventory)
+	_slots = SlotList.new()
+	_slots.back_requested.connect(func() -> void: _show_page(_root_page))
+	_slots.slot_chosen.connect(_on_slot_chosen)
+	outer.add_child(_slots)
+	_settings = SettingsPanel.new()
+	_settings.back_requested.connect(func() -> void: _show_page(_root_page))
+	outer.add_child(_settings)
 
 	_status = Label.new()
 	_status.add_theme_font_size_override("font_size", 8)
@@ -92,53 +97,45 @@ func _build() -> void:
 	outer.add_child(_status)
 
 
-func _add_button(parent: Control, text: String, callback: Callable) -> Button:
+func _add_button(parent: Control, key: String, callback: Callable) -> Button:
 	var b := Button.new()
-	b.text = text
+	b.text = key
 	b.pressed.connect(callback)
 	b.focus_entered.connect(func() -> void: AudioService.play_ui(&"ui_move"))
 	parent.add_child(b)
 	return b
 
 
-func _add_slider(parent: Control, text: String, key: StringName) -> void:
-	var row := HBoxContainer.new()
-	var label := Label.new()
-	label.text = text
-	label.custom_minimum_size = Vector2(90, 0)
-	label.add_theme_font_size_override("font_size", 8)
-	row.add_child(label)
-	var slider := HSlider.new()
-	slider.min_value = 0.0
-	slider.max_value = 1.0
-	slider.step = 0.05
-	slider.custom_minimum_size = Vector2(90, 12)
-	slider.value = float(SettingsService.get_value(key))
-	slider.value_changed.connect(func(v: float) -> void: SettingsService.set_value(key, v))
-	row.add_child(slider)
-	parent.add_child(row)
+func _show_page(page: Control, slot_mode: SlotList.Mode = SlotList.Mode.LOAD) -> void:
+	for p: Control in [_root_page, _inventory, _slots, _settings]:
+		p.visible = p == page
+	if page == _root_page:
+		(_root_page.get_child(0) as Button).grab_focus.call_deferred()
+	elif page == _inventory:
+		_inventory.open()
+	elif page == _slots:
+		_slots.open(slot_mode)
+	elif page == _settings:
+		_settings.focus_first()
+	_center_panel.call_deferred()
 
 
-func _show_root() -> void:
-	_root_box.visible = true
-	_settings_box.visible = false
-	(_root_box.get_child(0) as Button).grab_focus.call_deferred()
+func _center_panel() -> void:
+	_panel.reset_size()
+	_panel.position = ((get_viewport_rect().size - _panel.size) * 0.5).floor()
 
 
-func _show_settings() -> void:
-	_root_box.visible = false
-	_settings_box.visible = true
-	(_settings_box.get_child(0).get_child(1) as Control).grab_focus.call_deferred()
+func _on_slot_chosen(slot: int) -> void:
+	if _slots.mode == SlotList.Mode.SAVE:
+		var ok := SaveService.save_game(slot)
+		_status.text = tr("UI_SAVED_SLOT") % (tr("UI_SLOT") % slot) if ok else tr("UI_SAVE_FAILED")
+		_slots.open(SlotList.Mode.SAVE)
+	else:
+		close()
+		if not SaveService.load_game(slot):
+			EventBus.toast_requested.emit(tr("UI_LOAD_FAILED"))
 
 
-func _on_save() -> void:
-	var ok := SaveService.save_game(SAVE_SLOT)
-	_status.text = "Đã lưu vào ô %d" % SAVE_SLOT if ok else "Lưu thất bại!"
-
-
-func _on_load() -> void:
-	if not SaveService.has_save(SAVE_SLOT):
-		_status.text = "Chưa có bản lưu"
-		return
-	close()
-	SaveService.load_game(SAVE_SLOT)
+func _on_to_title() -> void:
+	visible = false
+	SceneRouter.change_scene(SceneRouter.TITLE_SCENE)

@@ -5,13 +5,14 @@ extends Node
 signal saved(slot: int)
 signal loaded(slot: int)
 
-const DIR := "user://saves"
+## Overridable so tests never touch real saves.
+var dir: String = "user://saves"
 const SLOT_COUNT := 3
 const AUTOSAVE_SLOT := 0
 
 
 func slot_path(slot: int) -> String:
-	return DIR.path_join("autosave.json" if slot == AUTOSAVE_SLOT else "slot_%d.json" % slot)
+	return dir.path_join("autosave.json" if slot == AUTOSAVE_SLOT else "slot_%d.json" % slot)
 
 
 func has_save(slot: int) -> bool:
@@ -25,6 +26,7 @@ func save_game(slot: int) -> bool:
 		"saved_at": Time.get_datetime_string_from_system(),
 		"playtime": GameState.playtime,
 		"map_path": GameState.map_path,
+		"map_name": GameState.map_display_name,
 	}
 	var ok := write_atomic(slot_path(slot), SaveCodec.encode(data))
 	if ok:
@@ -32,16 +34,51 @@ func save_game(slot: int) -> bool:
 	return ok
 
 
+## In-game load: replace GameState and move to the saved map.
 func load_game(slot: int) -> bool:
+	if not read_into_state(slot):
+		return false
+	EventBus.after_load.emit()
+	SceneRouter.change_map(GameState.map_path, GameState.spawn_id)
+	loaded.emit(slot)
+	return true
+
+
+## Replace GameState with a slot's data without touching the scene (title screen).
+func read_into_state(slot: int) -> bool:
 	var data := read_slot(slot)
 	if data.is_empty():
 		push_warning("SaveService: slot %d is empty or invalid" % slot)
 		return false
 	GameState.load_dict(data)
-	EventBus.after_load.emit()
-	SceneRouter.change_map(GameState.map_path, GameState.spawn_id)
-	loaded.emit(slot)
 	return true
+
+
+## Metadata for slot lists: {} if empty, else { saved_at, playtime, map_name, ... }.
+func slot_meta(slot: int) -> Dictionary:
+	var data := read_slot(slot)
+	return data.get("meta", {"map_name": "?"}) if not data.is_empty() else {}
+
+
+## Most recently written slot, or -1 if there are no saves.
+func latest_slot() -> int:
+	var best := -1
+	var best_time := -1
+	for slot: int in range(0, SLOT_COUNT + 1):
+		if has_save(slot):
+			var t := FileAccess.get_modified_time(slot_path(slot))
+			if t > best_time:
+				best_time = t
+				best = slot
+	return best
+
+
+## All slots shown in menus: autosave first, then manual slots.
+static func all_slots() -> Array[int]:
+	var out: Array[int] = [AUTOSAVE_SLOT]
+	for i: int in range(1, SLOT_COUNT + 1):
+		out.append(i)
+	return out
 
 
 func read_slot(slot: int) -> Dictionary:

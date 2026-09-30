@@ -33,6 +33,7 @@ func load_map(map_path: String, spawn_id: StringName) -> void:
 	var spawn := spawn_id if spawn_id != &"" else map.default_spawn
 	GameState.map_path = map_path
 	GameState.spawn_id = spawn
+	GameState.map_display_name = map.display_name
 	var at: Vector2 = map.get_spawn_position(spawn)
 	if GameState.pending_position is Vector2:
 		at = GameState.pending_position

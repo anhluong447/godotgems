@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/definitions/item_def.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/coin.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"coin"
+display_name = "Xu"
+description = "Đồng xu của làng."
+kind = 0
+max_stack = 9999
+heal_amount = 0
+icon = ExtResource("2")
+color = Color(1, 0.85, 0.3, 1)

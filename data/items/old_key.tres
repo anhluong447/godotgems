@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/definitions/item_def.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/old_key.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"old_key"
+display_name = "Chìa khoá cũ"
+description = "Một chiếc chìa khoá gỉ sét."
+kind = 2
+max_stack = 1
+heal_amount = 0
+icon = ExtResource("2")
+color = Color(0.95, 0.8, 0.3, 1)

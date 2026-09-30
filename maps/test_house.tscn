@@ -1,0 +1,86 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://src/gameplay/world/map_base.gd" id="1_qxjxi"]
+[ext_resource type="TileSet" path="res://assets/tilesets/xuan_field_tileset.tres" id="2_lweuh"]
+[ext_resource type="PackedScene" path="res://src/gameplay/entities/props/door.tscn" id="3_twmun"]
+[ext_resource type="Script" path="res://src/gameplay/entities/props/door.gd" id="4_cw3c4"]
+[ext_resource type="PackedScene" path="res://src/gameplay/entities/props/npc.tscn" id="5_iuq7s"]
+[ext_resource type="Script" path="res://src/gameplay/entities/props/npc.gd" id="6_4kldg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_elder/npc_elder_walk.png" id="7_knxpf"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/dialogue_line.gd" id="8_c0y8f"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/dialogue_data.gd" id="9_qa4rh"]
+[ext_resource type="PackedScene" path="res://src/gameplay/entities/props/chest.tscn" id="10_jrniu"]
+[ext_resource type="Script" path="res://src/gameplay/entities/props/chest.gd" id="11_ff6r6"]
+[ext_resource type="Resource" path="res://data/items/old_key.tres" id="12_v4d7m"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chest_closed.png" id="13_glxts"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chest_open.png" id="14_51msi"]
+[ext_resource type="PackedScene" path="res://src/gameplay/entities/props/breakable_pot.tscn" id="15_mw58h"]
+[ext_resource type="Script" path="res://src/gameplay/entities/props/breakable.gd" id="16_ff0we"]
+
+[sub_resource type="Resource" id="Resource_r7cdh"]
+script = ExtResource("8_c0y8f")
+speaker = "Bà cụ"
+text = "Căn phòng này lạnh và xám, khác hẳn ngoài kia nhỉ?"
+choices = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_8200u"]
+script = ExtResource("8_c0y8f")
+speaker = "Bà cụ"
+text = "Đây là thử nghiệm bảng màu \"Thực\". Ra ngoài sẽ thấy màu \"Xuân\"."
+choices = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_cf4nt"]
+script = ExtResource("9_qa4rh")
+lines = Array[ExtResource("8_c0y8f")]([SubResource("Resource_r7cdh"), SubResource("Resource_8200u")])
+
+[node name="TestHouse" type="Node2D" unique_id=1267077436]
+script = ExtResource("1_qxjxi")
+map_id = &"test_house"
+display_name = "Căn phòng xám"
+palette = &"thuc"
+default_spawn = &"entrance"
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=487025718]
+tile_map_data = PackedByteArray("AAAAAAAAAAAEAAEAAAABAAAAAAAEAAEAAAACAAAAAAAEAAEAAAADAAAAAAAEAAEAAAAEAAAAAAAEAAEAAAAFAAAAAAAEAAEAAAAGAAAAAAAEAAEAAAAHAAAAAAAEAAEAAAAIAAAAAAAEAAEAAAAJAAAAAAAEAAEAAAAKAAAAAAAEAAEAAAALAAAAAAAEAAEAAAAMAAAAAAAEAAEAAAANAAAAAAAEAAEAAAAOAAAAAAAEAAEAAAAPAAAAAAAEAAEAAAAAAAEAAAAEAAEAAAABAAEAAAAEAAEAAAACAAEAAAAEAAEAAAADAAEAAAAEAAEAAAAEAAEAAAAEAAEAAAAFAAEAAAAEAAEAAAAGAAEAAAAEAAEAAAAHAAEAAAAEAAEAAAAIAAEAAAAEAAEAAAAJAAEAAAAEAAEAAAAKAAEAAAAEAAEAAAALAAEAAAAEAAEAAAAMAAEAAAAEAAEAAAANAAEAAAAEAAEAAAAOAAEAAAAEAAEAAAAPAAEAAAAEAAEAAAAAAAIAAAAEAAEAAAABAAIAAAAFAAAAAAACAAIAAAAFAAAAAAADAAIAAAAFAAAAAAAEAAIAAAAFAAAAAAAFAAIAAAAFAAAAAAAGAAIAAAAFAAAAAAAHAAIAAAAFAAAAAAAIAAIAAAAFAAAAAAAJAAIAAAAFAAAAAAAKAAIAAAAFAAAAAAALAAIAAAAFAAAAAAAMAAIAAAAFAAAAAAANAAIAAAAFAAAAAAAOAAIAAAAFAAAAAAAPAAIAAAAEAAEAAAAAAAMAAAAEAAEAAAABAAMAAAAFAAAAAAACAAMAAAAFAAAAAAADAAMAAAAFAAAAAAAEAAMAAAAFAAAAAAAFAAMAAAAFAAAAAAAGAAMAAAAFAAAAAAAHAAMAAAAFAAAAAAAIAAMAAAAFAAAAAAAJAAMAAAAFAAAAAAAKAAMAAAAFAAAAAAALAAMAAAAFAAAAAAAMAAMAAAAFAAAAAAANAAMAAAAFAAAAAAAOAAMAAAAFAAAAAAAPAAMAAAAEAAEAAAAAAAQAAAAEAAEAAAABAAQAAAAFAAAAAAACAAQAAAAFAAAAAAADAAQAAAAFAAAAAAAEAAQAAAAFAAAAAAAFAAQAAAAFAAAAAAAGAAQAAAAFAAAAAAAHAAQAAAAFAAAAAAAIAAQAAAAFAAAAAAAJAAQAAAAFAAAAAAAKAAQAAAAFAAAAAAALAAQAAAAFAAAAAAAMAAQAAAAFAAAAAAANAAQAAAAFAAAAAAAOAAQAAAAFAAAAAAAPAAQAAAAEAAEAAAAAAAUAAAAEAAEAAAABAAUAAAAFAAAAAAACAAUAAAAFAAAAAAADAAUAAAAFAAAAAAAEAAUAAAAFAAAAAAAFAAUAAAAFAAAAAAAGAAUAAAAFAAAAAAAHAAUAAAAFAAAAAAAIAAUAAAAFAAAAAAAJAAUAAAAFAAAAAAAKAAUAAAAFAAAAAAALAAUAAAAFAAAAAAAMAAUAAAAFAAAAAAANAAUAAAAFAAAAAAAOAAUAAAAFAAAAAAAPAAUAAAAEAAEAAAAAAAYAAAAEAAEAAAABAAYAAAAFAAAAAAACAAYAAAAFAAAAAAADAAYAAAAFAAAAAAAEAAYAAAAFAAAAAAAFAAYAAAAFAAAAAAAGAAYAAAAFAAAAAAAHAAYAAAAFAAAAAAAIAAYAAAAFAAAAAAAJAAYAAAAFAAAAAAAKAAYAAAAFAAAAAAALAAYAAAAFAAAAAAAMAAYAAAAFAAAAAAANAAYAAAAFAAAAAAAOAAYAAAAFAAAAAAAPAAYAAAAEAAEAAAAAAAcAAAAEAAEAAAABAAcAAAAFAAAAAAACAAcAAAAFAAAAAAADAAcAAAAFAAAAAAAEAAcAAAAFAAAAAAAFAAcAAAAFAAAAAAAGAAcAAAAFAAAAAAAHAAcAAAAFAAAAAAAIAAcAAAAFAAAAAAAJAAcAAAAFAAAAAAAKAAcAAAAFAAAAAAALAAcAAAAFAAAAAAAMAAcAAAAFAAAAAAANAAcAAAAFAAAAAAAOAAcAAAAFAAAAAAAPAAcAAAAEAAEAAAAAAAgAAAAEAAEAAAABAAgAAAAFAAAAAAACAAgAAAAFAAAAAAADAAgAAAAFAAAAAAAEAAgAAAAFAAAAAAAFAAgAAAAFAAAAAAAGAAgAAAAFAAAAAAAHAAgAAAAFAAAAAAAIAAgAAAAFAAAAAAAJAAgAAAAFAAAAAAAKAAgAAAAFAAAAAAALAAgAAAAFAAAAAAAMAAgAAAAFAAAAAAANAAgAAAAFAAAAAAAOAAgAAAAFAAAAAAAPAAgAAAAEAAEAAAAAAAkAAAAEAAEAAAABAAkAAAAFAAAAAAACAAkAAAAFAAAAAAADAAkAAAAFAAAAAAAEAAkAAAAFAAAAAAAFAAkAAAAFAAAAAAAGAAkAAAAFAAAAAAAHAAkAAAAFAAAAAAAIAAkAAAAFAAAAAAAJAAkAAAAFAAAAAAAKAAkAAAAFAAAAAAALAAkAAAAFAAAAAAAMAAkAAAAFAAAAAAANAAkAAAAFAAAAAAAOAAkAAAAFAAAAAAAPAAkAAAAEAAEAAAAAAAoAAAAEAAEAAAABAAoAAAAFAAAAAAACAAoAAAAFAAAAAAADAAoAAAAFAAAAAAAEAAoAAAAFAAAAAAAFAAoAAAAFAAAAAAAGAAoAAAAFAAAAAAAHAAoAAAAFAAAAAAAIAAoAAAAFAAAAAAAJAAoAAAAFAAAAAAAKAAoAAAAFAAAAAAALAAoAAAAFAAAAAAAMAAoAAAAFAAAAAAANAAoAAAAFAAAAAAAOAAoAAAAFAAAAAAAPAAoAAAAEAAEAAAAAAAsAAAAEAAEAAAABAAsAAAAEAAEAAAACAAsAAAAEAAEAAAADAAsAAAAEAAEAAAAEAAsAAAAEAAEAAAAFAAsAAAAEAAEAAAAGAAsAAAAEAAEAAAAHAAsAAAAFAAAAAAAIAAsAAAAFAAAAAAAJAAsAAAAEAAEAAAAKAAsAAAAEAAEAAAALAAsAAAAEAAEAAAAMAAsAAAAEAAEAAAANAAsAAAAEAAEAAAAOAAsAAAAEAAEAAAAPAAsAAAAEAAEAAAA=")
+tile_set = ExtResource("2_lweuh")
+
+[node name="Decor" type="TileMapLayer" parent="." unique_id=506779164]
+tile_set = ExtResource("2_lweuh")
+collision_enabled = false
+
+[node name="Entities" type="Node2D" parent="." unique_id=1206995730]
+y_sort_enabled = true
+
+[node name="ExitDoor" type="StaticBody2D" parent="Entities" unique_id=1075961234 instance=ExtResource("3_twmun")]
+position = Vector2(256, 384)
+script = ExtResource("4_cw3c4")
+target_map = "res://maps/test_field.tscn"
+target_spawn = &"from_house"
+
+[node name="Elder" type="StaticBody2D" parent="Entities" unique_id=1767922164 instance=ExtResource("5_iuq7s")]
+position = Vector2(144, 156)
+script = ExtResource("6_4kldg")
+display_name = "Bà cụ"
+sprite_sheet = ExtResource("7_knxpf")
+dialogue = SubResource("Resource_cf4nt")
+lines = PackedStringArray()
+
+[node name="ChestKey" type="StaticBody2D" parent="Entities" unique_id=331048299 instance=ExtResource("10_jrniu")]
+position = Vector2(400, 124)
+script = ExtResource("11_ff6r6")
+item = ExtResource("12_v4d7m")
+closed_texture = ExtResource("13_glxts")
+open_texture = ExtResource("14_51msi")
+
+[node name="Pot0" type="StaticBody2D" parent="Entities" unique_id=1777422364 instance=ExtResource("15_mw58h")]
+position = Vector2(432, 284)
+script = ExtResource("16_ff0we")
+
+[node name="Pot1" type="StaticBody2D" parent="Entities" unique_id=821165301 instance=ExtResource("15_mw58h")]
+position = Vector2(464, 284)
+script = ExtResource("16_ff0we")
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=1682048245]
+
+[node name="entrance" type="Marker2D" parent="SpawnPoints" unique_id=378970456]
+position = Vector2(256, 328)

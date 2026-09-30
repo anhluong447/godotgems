@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="CharacterDef" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/definitions/character_def.gd" id="1"]
+[ext_resource type="Resource" path="res://data/abilities/vu_slash_1.tres" id="2"]
+[ext_resource type="Resource" path="res://data/abilities/vu_slash_2.tres" id="3"]
+[ext_resource type="Resource" path="res://data/abilities/vu_slash_3.tres" id="4"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/ability_def.gd" id="5"]
+[ext_resource type="Resource" path="res://data/abilities/vu_dash_strike.tres" id="6"]
+[ext_resource type="Resource" path="res://data/abilities/vu_whirlwind.tres" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/vu/vu_walk.png" id="8"]
+
+[resource]
+script = ExtResource("1")
+id = &"vu"
+display_name = "Vũ"
+role = "Nghĩa Kiếm — cận chiến nhanh"
+max_hp = 100.0
+atk = 12.0
+def = 4.0
+spd = 110.0
+max_energy = 100.0
+energy_regen = 5.0
+poise = 25.0
+combo = Array[ExtResource("5")]([ExtResource("2"), ExtResource("3"), ExtResource("4")])
+skill_1 = ExtResource("6")
+skill_2 = ExtResource("7")
+sprite_sheet = ExtResource("8")
+combo_reset_time = 0.6
+dodge_speed = 290.0
+dodge_time = 0.2
+dodge_iframes = 0.24
+dodge_cooldown = 0.45
+ai_preferred_distance = 0.0
+ai_engage_range = 160.0
+color = Color(0.3, 0.5, 0.9, 1)

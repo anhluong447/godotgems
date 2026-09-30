@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/definitions/item_def.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/items/heart.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"heart"
+display_name = "Trái tim"
+description = "Hồi 15 HP ngay khi nhặt."
+kind = 3
+max_stack = 1
+heal_amount = 15
+icon = ExtResource("2")
+color = Color(0.9, 0.2, 0.3, 1)

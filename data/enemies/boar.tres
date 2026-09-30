@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/definitions/enemy_def.gd" id="1"]
+[ext_resource type="Resource" path="res://data/abilities/boar_charge.tres" id="2"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/ability_def.gd" id="3"]
+[ext_resource type="Resource" path="res://data/items/coin.tres" id="4"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/loot_entry.gd" id="5"]
+[ext_resource type="Resource" path="res://data/items/herb.tres" id="6"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/loot_table.gd" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boar/boar_walk.png" id="8"]
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("5")
+item = ExtResource("4")
+chance = 1.0
+min_count = 3
+max_count = 6
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("5")
+item = ExtResource("6")
+chance = 0.4
+min_count = 1
+max_count = 1
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("7")
+entries = Array[ExtResource("5")]([SubResource("Resource_1"), SubResource("Resource_2")])
+
+[resource]
+script = ExtResource("1")
+id = &"boar"
+display_name = "Heo rừng"
+max_hp = 75.0
+atk = 10.0
+def = 3.0
+spd = 70.0
+poise = 60.0
+stagger_time = 0.6
+knockback_resist = 0.5
+abilities = Array[ExtResource("3")]([ExtResource("2")])
+aggro_range = 160.0
+leash_range = 320.0
+recover_time = 0.9
+wander_radius = 40.0
+xp_reward = 16
+loot = SubResource("Resource_3")
+sprite_sheet = ExtResource("8")
+body_radius = 12.0
+color = Color(0.55, 0.36, 0.24, 1)

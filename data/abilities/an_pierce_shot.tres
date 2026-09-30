@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/definitions/ability_def.gd" id="1"]
+[ext_resource type="Script" path="res://src/gameplay/abilities/behaviors/projectile_behavior.gd" id="2"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/projectile_def.gd" id="3"]
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2")
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("3")
+speed = 520.0
+lifetime = 0.8
+pierce = 99
+radius = 5.0
+length = 18.0
+color = Color(0.6, 0.9, 1.0, 1)
+
+[resource]
+script = ExtResource("1")
+id = &"an_pierce_shot"
+display_name = "Tên Xuyên"
+behavior = SubResource("Resource_1")
+projectile = SubResource("Resource_2")
+energy_cost = 20.0
+cooldown = 2.0
+windup = 0.18
+active_time = 0.02
+recovery = 0.25
+power = 2.2
+knockback = 140.0
+hitstop = 0.06
+shake = 0.18
+poise_damage = 25.0
+show_telegraph = true
+sfx_start = &"skill"
+sfx_active = &"shoot"
+ai_range = 170.0

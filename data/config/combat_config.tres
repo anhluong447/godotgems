@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CombatConfig" format=3]
+
+[ext_resource type="Script" path="res://src/core/combat/combat_config.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+def_scale = 20.0
+variance = 0.1
+crit_chance = 0.05
+crit_multiplier = 1.5
+min_damage = 1
+party_hit_iframes = 0.35
+downed_duration = 10.0
+revive_hp_ratio = 0.3
+switch_cooldown = 1.0
+shake_scale_when_party_hit = 1.6

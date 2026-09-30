@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="CharacterDef" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/definitions/character_def.gd" id="1"]
+[ext_resource type="Resource" path="res://data/abilities/an_shot.tres" id="2"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/ability_def.gd" id="3"]
+[ext_resource type="Resource" path="res://data/abilities/an_pierce_shot.tres" id="4"]
+[ext_resource type="Resource" path="res://data/abilities/an_arrow_rain.tres" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/binh_an/binh_an_walk.png" id="6"]
+
+[resource]
+script = ExtResource("1")
+id = &"binh_an"
+display_name = "Bình An"
+role = "Hoan Cung — tầm xa"
+max_hp = 80.0
+atk = 10.0
+def = 3.0
+spd = 100.0
+max_energy = 100.0
+energy_regen = 6.0
+poise = 15.0
+combo = Array[ExtResource("3")]([ExtResource("2")])
+skill_1 = ExtResource("4")
+skill_2 = ExtResource("5")
+sprite_sheet = ExtResource("6")
+combo_reset_time = 0.4
+dodge_speed = 270.0
+dodge_time = 0.2
+dodge_iframes = 0.22
+dodge_cooldown = 0.5
+ai_preferred_distance = 110.0
+ai_engage_range = 190.0
+color = Color(0.4, 0.7, 0.35, 1)

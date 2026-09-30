@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="AbilityDef" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/definitions/ability_def.gd" id="1"]
+[ext_resource type="Script" path="res://src/gameplay/abilities/behaviors/melee_behavior.gd" id="2"]
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2")
+
+[resource]
+script = ExtResource("1")
+id = &"vu_dash_strike"
+display_name = "Xung Kích"
+behavior = SubResource("Resource_1")
+energy_cost = 25.0
+cooldown = 2.5
+windup = 0.08
+active_time = 0.18
+recovery = 0.2
+lunge_speed = 430.0
+grants_iframes = true
+afterimages = true
+power = 2.0
+knockback = 180.0
+hitstop = 0.07
+shake = 0.25
+poise_damage = 35.0
+hit_size = Vector2(30, 28)
+hit_offset = 10.0
+sfx_start = &"skill"
+sfx_active = &"dodge"
+ai_range = 90.0

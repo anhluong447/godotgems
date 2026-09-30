@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/entities/props/breakable.gd" id="1_break"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/pot.png" id="2_tex"]
+[ext_resource type="Script" path="res://src/gameplay/components/health_component.gd" id="3_health"]
+[ext_resource type="Script" path="res://src/gameplay/components/hurtbox_component.gd" id="4_hurt"]
+[ext_resource type="Script" path="res://src/gameplay/components/loot_dropper.gd" id="5_loot"]
+[ext_resource type="Script" path="res://src/gameplay/components/flash_component.gd" id="6_flash"]
+[ext_resource type="Resource" path="res://data/items/coin.tres" id="7_coin"]
+[ext_resource type="Resource" path="res://data/items/heart.tres" id="8_heart"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/loot_table.gd" id="9_table"]
+[ext_resource type="Script" path="res://src/gameplay/definitions/loot_entry.gd" id="10_entry"]
+
+[sub_resource type="Resource" id="Resource_coin"]
+script = ExtResource("10_entry")
+item = ExtResource("7_coin")
+chance = 0.6
+min_count = 1
+max_count = 2
+
+[sub_resource type="Resource" id="Resource_heart"]
+script = ExtResource("10_entry")
+item = ExtResource("8_heart")
+chance = 0.3
+
+[sub_resource type="Resource" id="Resource_table"]
+script = ExtResource("9_table")
+entries = Array[ExtResource("10_entry")]([SubResource("Resource_coin"), SubResource("Resource_heart")])
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 6.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurt"]
+size = Vector2(14, 16)
+
+[node name="BreakablePot" type="StaticBody2D"]
+script = ExtResource("1_break")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+offset = Vector2(0, -8)
+
+[node name="BodyShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_body")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("3_health")
+max_hp = 1.0
+
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health")]
+script = ExtResource("4_hurt")
+health = NodePath("../Health")
+faction = 2
+
+[node name="Shape" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_hurt")
+
+[node name="LootDropper" type="Node" parent="."]
+script = ExtResource("5_loot")
+table = SubResource("Resource_table")
+
+[node name="Flash" type="Node" parent="." node_paths=PackedStringArray("target")]
+script = ExtResource("6_flash")
+target = NodePath("../Sprite")

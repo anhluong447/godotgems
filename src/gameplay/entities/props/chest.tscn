@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/entities/props/chest.gd" id="1_chest"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chest_closed.png" id="2_closed"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chest_open.png" id="3_open"]
+[ext_resource type="Script" path="res://src/gameplay/components/interactable_component.gd" id="4_inter"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(20, 8)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_inter"]
+radius = 14.0
+
+[node name="Chest" type="StaticBody2D"]
+script = ExtResource("1_chest")
+closed_texture = ExtResource("2_closed")
+open_texture = ExtResource("3_open")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_closed")
+offset = Vector2(0, -9)
+
+[node name="BodyShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Interactable" type="Area2D" parent="."]
+script = ExtResource("4_inter")
+prompt = "Mở rương"
+
+[node name="Shape" type="CollisionShape2D" parent="Interactable"]
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_inter")

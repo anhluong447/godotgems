@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/tree.png" id="1_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trunk"]
+radius = 7.0
+
+[node name="Tree" type="StaticBody2D"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_tex")
+offset = Vector2(0, -30)
+
+[node name="Trunk" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_trunk")

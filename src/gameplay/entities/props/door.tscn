@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/entities/props/door.gd" id="1_door"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/door.png" id="2_tex"]
+[ext_resource type="Script" path="res://src/gameplay/components/interactable_component.gd" id="3_inter"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(30, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
+size = Vector2(28, 22)
+
+[node name="Door" type="StaticBody2D"]
+script = ExtResource("1_door")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+offset = Vector2(0, -20)
+
+[node name="BodyShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Interactable" type="Area2D" parent="."]
+script = ExtResource("3_inter")
+prompt = "Vào"
+prompt_offset = Vector2(0, -44)
+
+[node name="Shape" type="CollisionShape2D" parent="Interactable"]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_inter")

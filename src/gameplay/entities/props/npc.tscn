@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/entities/props/npc.gd" id="1_npc"]
+[ext_resource type="Script" path="res://src/gameplay/entities/actor_visual.gd" id="2_visual"]
+[ext_resource type="Script" path="res://src/gameplay/components/interactable_component.gd" id="3_inter"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/npc_villager/npc_villager_walk.png" id="4_sheet"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_inter"]
+radius = 20.0
+
+[node name="Npc" type="StaticBody2D"]
+script = ExtResource("1_npc")
+sprite_sheet = ExtResource("4_sheet")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("2_visual")
+
+[node name="Sprite" type="Sprite2D" parent="Visual"]
+
+[node name="BodyShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_body")
+
+[node name="Interactable" type="Area2D" parent="."]
+script = ExtResource("3_inter")
+prompt_offset = Vector2(0, -54)
+
+[node name="Shape" type="CollisionShape2D" parent="Interactable"]
+position = Vector2(0, -8)
+shape = SubResource("CircleShape2D_inter")

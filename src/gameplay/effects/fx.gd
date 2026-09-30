@@ -73,6 +73,31 @@ static func area_burst(parent: Node, at: Vector2, radius: float, color: Color) -
 	_attach(parent, p, at)
 
 
+static func heal(parent: Node, at: Vector2) -> void:
+	if parent == null:
+		return
+	var p := CPUParticles2D.new()
+	p.one_shot = true
+	p.explosiveness = 0.6
+	p.amount = 16
+	p.lifetime = 0.7
+	p.emission_shape = CPUParticles2D.EMISSION_SHAPE_SPHERE
+	p.emission_sphere_radius = 9.0
+	p.direction = Vector2.UP
+	p.spread = 20.0
+	p.gravity = Vector2(0, -40)
+	p.initial_velocity_min = 10.0
+	p.initial_velocity_max = 30.0
+	p.scale_amount_min = 1.5
+	p.scale_amount_max = 2.5
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(0.6, 1.0, 0.6, 1.0))
+	ramp.set_color(1, Color(0.6, 1.0, 0.6, 0.0))
+	p.color_ramp = ramp
+	p.z_index = 20
+	_attach(parent, p, at + Vector2(0, -10))
+
+
 static func afterimage(visual: ActorVisual) -> void:
 	if visual == null or visual.sprite == null or visual.sprite.texture == null:
 		return

@@ -30,6 +30,12 @@ signal party_wiped
 signal member_leveled_up(character_id: StringName, level: int)
 
 # --- Items & interaction ---
+## Command: use an item on the party leader. Empty id = best healing item available.
+## Sent by UI or input; handled by PartyManager (UI never touches inventory directly).
+@warning_ignore("unused_signal")
+signal item_use_requested(item_id: StringName)
+@warning_ignore("unused_signal")
+signal item_used(item_id: StringName, healed: int)
 @warning_ignore("unused_signal")
 signal item_collected(item_id: StringName, count: int)
 ## `target` is the focused InteractableComponent, or null when nothing is in reach.

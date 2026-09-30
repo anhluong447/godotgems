@@ -22,6 +22,8 @@ func _ready() -> void:
 	EventBus.enemy_killed.connect(_on_enemy_killed)
 	EventBus.before_save.connect(_on_before_save)
 	EventBus.after_load.connect(build_from_state)
+	Registry.resource_tuned.connect(_on_resource_tuned)
+	EventBus.item_use_requested.connect(use_item)
 	_register_debug_commands()
 
 
@@ -52,6 +54,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 	if event.is_action_pressed(&"switch_next"):
 		switch_next()
+	elif event.is_action_pressed(&"use_item"):
+		use_item(&"")
 
 
 # --- Roster ---
@@ -165,6 +169,43 @@ func _on_member_downed(m: PartyMember) -> void:
 		switch_next(true)
 
 
+# --- Items ---
+
+## Uses a consumable on the leader. Empty id picks the smallest heal that is useful.
+## Returns true if an item was consumed.
+func use_item(item_id: StringName) -> bool:
+	if leader == null or leader.is_downed() or not leader.is_inside_tree():
+		return false
+	var item := Registry.item(item_id) if item_id != &"" else best_healing_item()
+	if item == null:
+		EventBus.toast_requested.emit(tr("TOAST_NO_CONSUMABLE"))
+		return false
+	if item.kind != ItemDef.Kind.CONSUMABLE or not GameState.inventory.has(item.id):
+		return false
+	if leader.health.pool.is_full():
+		EventBus.toast_requested.emit(tr("TOAST_HP_FULL"))
+		return false
+	GameState.inventory.remove(item.id, 1)
+	var healed := roundi(leader.health.heal(item.heal_amount))
+	AudioService.play_sfx(&"revive", 0.05)
+	Fx.heal(leader.get_parent(), leader.global_position)
+	EventBus.item_used.emit(item.id, healed)
+	EventBus.toast_requested.emit(tr("TOAST_USED_ITEM") % [item.display_name, healed])
+	return true
+
+
+## Cheapest consumable that still heals (avoid wasting big potions), or null.
+func best_healing_item() -> ItemDef:
+	var best: ItemDef = null
+	for id: StringName in GameState.inventory.item_ids():
+		var item := Registry.item(id)
+		if item == null or item.kind != ItemDef.Kind.CONSUMABLE or item.heal_amount <= 0:
+			continue
+		if best == null or item.heal_amount < best.heal_amount:
+			best = item
+	return best
+
+
 # --- Progress ---
 
 func grant_xp(amount: int) -> void:
@@ -177,6 +218,12 @@ func grant_xp(amount: int) -> void:
 
 func _on_enemy_killed(_id: StringName, xp: int, _at: Vector2) -> void:
 	grant_xp(xp)
+
+
+func _on_resource_tuned(res: Resource) -> void:
+	for m: PartyMember in members:
+		if m.def == res and m.is_inside_tree():
+			m.on_stats_tuned()
 
 
 func _on_before_save() -> void:

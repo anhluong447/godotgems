@@ -29,10 +29,24 @@ func add_trauma(amount: float) -> void:
 
 
 func set_bounds(rect: Rect2) -> void:
-	limit_left = int(rect.position.x)
-	limit_top = int(rect.position.y)
-	limit_right = int(rect.end.x)
-	limit_bottom = int(rect.end.y)
+	var fitted := fit_bounds(rect, get_viewport_rect().size / zoom)
+	limit_left = int(fitted.position.x)
+	limit_top = int(fitted.position.y)
+	limit_right = int(fitted.end.x)
+	limit_bottom = int(fitted.end.y)
+
+
+## Rooms smaller than the view get limits centered on the room (even black bars
+## on both sides) instead of sticking to one edge.
+static func fit_bounds(rect: Rect2, view: Vector2) -> Rect2:
+	var out := rect
+	if rect.size.x < view.x:
+		out.position.x = rect.get_center().x - view.x * 0.5
+		out.size.x = view.x
+	if rect.size.y < view.y:
+		out.position.y = rect.get_center().y - view.y * 0.5
+		out.size.y = view.y
+	return out
 
 
 ## Jump to the target instantly (map load).

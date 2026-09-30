@@ -29,3 +29,5 @@ hit_offset = 10.0
 sfx_start = &"skill"
 sfx_active = &"dodge"
 ai_range = 90.0
+trail = true
+trail_color = Color(0.6, 0.85, 1, 0.9)

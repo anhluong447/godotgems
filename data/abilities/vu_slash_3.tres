@@ -25,3 +25,5 @@ hit_size = Vector2(32, 30)
 hit_offset = 18.0
 sfx_active = &"swing"
 ai_range = 32.0
+trail = true
+trail_color = Color(1, 0.92, 0.6, 0.95)

@@ -45,6 +45,11 @@ extends Resource
 @export var sfx_start: StringName
 @export var sfx_active: StringName = &"swing"
 @export var afterimages: bool = false
+## Melee only: draw a swoosh over the hit area.
+@export var trail: bool = false
+@export var trail_color: Color = Color(0.85, 0.95, 1.0, 0.9)
+## Swing from the other side (alternate combo hits).
+@export var trail_flip: bool = false
 
 @export_group("Projectile")
 @export var projectile: ProjectileDef

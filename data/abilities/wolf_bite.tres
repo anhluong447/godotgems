@@ -26,3 +26,5 @@ hit_offset = 12.0
 show_telegraph = true
 sfx_active = &"swing"
 ai_range = 60.0
+trail = true
+trail_color = Color(1, 0.4, 0.35, 0.8)

@@ -41,6 +41,11 @@ func on_active_start(ctx: AbilityContext) -> void:
 	if def.lunge_speed > 0.0:
 		ctx.actor.movement.set_forced(ctx.aim * def.lunge_speed)
 	ctx.actor.visual.pop(Vector2(1.15, 0.9), 0.1)
+	if def.trail:
+		if def.hit_radius > 0.0:
+			SlashTrail.ring(ctx.actor, def.hit_radius, def.trail_color)
+		else:
+			SlashTrail.for_rect(ctx.actor, ctx.aim, def.hit_size, def.hit_offset, def.trail_color, def.trail_flip)
 	if def.afterimages:
 		ctx.data["afterimage_timer"] = 0.0
 

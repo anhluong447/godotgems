@@ -25,3 +25,5 @@ hit_size = Vector2(28, 24)
 hit_offset = 16.0
 sfx_active = &"swing"
 ai_range = 30.0
+trail = true
+trail_flip = true

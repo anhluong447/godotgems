@@ -27,3 +27,5 @@ telegraph_color = Color(0.6, 0.85, 1.0, 0.35)
 sfx_start = &"skill"
 sfx_active = &"swing"
 ai_range = 40.0
+trail = true
+trail_color = Color(0.6, 0.85, 1, 0.85)

@@ -61,6 +61,13 @@ func on_level_changed() -> void:
 	leveled_up.emit(progression.level)
 
 
+## Debug live tuning changed our CharacterDef.
+func on_stats_tuned() -> void:
+	_apply_stats(false)
+	dodge_cooldown.duration = def.dodge_cooldown
+	poise.set_maximum(def.poise, true)
+
+
 func set_controller(c: MemberController) -> void:
 	controller = c
 	intent.clear()

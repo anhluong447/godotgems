@@ -1,4 +1,4 @@
-# TRƯỜNG XUÂN — KIẾN TRÚC KỸ THUẬT (Backbone v0.1)
+# TRƯỜNG XUÂN — KIẾN TRÚC KỸ THUẬT (Backbone v0.2)
 
 Tài liệu này mô tả **cách code được tổ chức** và **cách mở rộng**. Thiết kế game xem `v0.1/GGD.md`; quy tắc viết code xem `ENGINEERING_RULES.md`.
 
@@ -100,7 +100,28 @@ Phím hành động là **event-driven** (`_unhandled_input`), không poll trong
 
 `GameState` là **model thụ động**: không tự nghe sự kiện, không chạm scene tree. Hệ thống cốt truyện sau này (Tuần, Anchor, Cổng) sẽ thêm section của mình vào đây và vào `SaveMigrator`.
 
-### 3.5. Input gate
+### 3.5. Luồng khởi động
+
+`title_screen.tscn` (main scene) ─► lần đầu: cảnh báo nội dung (+ Chế độ Nhẹ Tay) ─► menu.
+- **Chơi mới**: `GameState.new_game()` ─► `SceneRouter.change_scene(GAME_SCENE)`.
+- **Tiếp tục / Tải**: `SaveService.read_into_state(slot)` ─► `change_scene(GAME_SCENE)`; `main.gd` dựng party từ `GameState` và vào đúng map/vị trí.
+- Pause ─► "Về màn hình chính": `change_scene(TITLE_SCENE)` (xoá khoá input, hitstop, pause cũ).
+
+`SceneRouter.change_map` gọi trong lúc đang chuyển map sẽ **xếp hàng** (chạy yêu cầu mới nhất ngay sau đó), không bị bỏ.
+
+### 3.6. Điều phối tấn công
+
+`AttackDirector` (node trong main) giữ `TokenPool`: tối đa `CombatConfig.max_simultaneous_attackers` quái được ở Telegraph/Attack cùng lúc. Quái chưa có token thì lượn quanh chờ; token tự trả khi rời Telegraph/Attack, khi bị choáng, chết hoặc bị xoá. Quái đứng gần nhau tự đẩy ra (`Enemy.separation()`), nên bầy quái vây quanh thay vì dồn một cục.
+
+### 3.7. Dùng vật phẩm (command qua EventBus)
+
+UI hoặc phím `R` phát `EventBus.item_use_requested(id)` (id rỗng = thuốc nhỏ nhất còn có ích) ─► `PartyManager.use_item` kiểm tra, trừ đồ, hồi máu leader, phát `item_used`. UI không bao giờ tự sửa inventory.
+
+### 3.8. Đa ngôn ngữ
+
+Chữ UI là key trong `assets/i18n/ui.csv` (cột `vi`, `en`). Label/Button tĩnh gán thẳng key (Godot tự dịch và đổi ngay khi đổi ngôn ngữ); chuỗi có tham số dùng `tr("KEY") % [...]`. Test `test_i18n.gd` chặn key thiếu. Nội dung truyện/vật phẩm hiện vẫn là data tiếng Việt (sẽ bản địa hoá cùng hệ thống kịch bản).
+
+### 3.9. Input gate
 
 `InputGate.acquire(reason)` / `release(reason)` khoá input gameplay khi có hội thoại, console, chuyển map, wipe. Mỗi nguồn khoá bằng lý do riêng nên không mở nhầm khoá của nhau.
 
@@ -115,6 +136,9 @@ Phím hành động là **event-driven** (`_unhandled_input`), không poll trong
 | **Vật phẩm** | `data/items/<id>.tres` | Không |
 | **Map mới** | Scene gốc gắn `map_base.gd` với Ground/Entities/SpawnPoints; vẽ bằng TileMapLayer; thả prop/Spawner vào Entities | Không |
 | **NPC / biển báo** | Thả `npc.tscn` / `sign_post.tscn`, gán `DialogueData` hoặc `lines` | Không |
+| **Chữ UI mới** | Thêm dòng vào `assets/i18n/ui.csv`, dùng key trong code | Không |
+| **Chỉnh số liệu khi đang chơi** | Console: `tune <id> <thuộc tính> <giá trị>`, ưng thì `tune_save <id>` | Không |
+| **Độ đông của trận** | `max_simultaneous_attackers`, `enemy_separation_radius` trong `combat_config.tres` | Không |
 | **Lệnh debug** | `DebugService.register("tên", callable, "mô tả")` trong hệ thống sở hữu nó | 1 dòng |
 | **Âm thanh thật** | Đặt `assets/audio/sfx/sfx_<id>.ogg`, sẽ đè lên synth placeholder cùng id | Không |
 | **Art thật** | Ghi đè PNG cùng tên/kích thước (xem GDD 13) | Không |
@@ -124,13 +148,15 @@ Test `tests/unit/test_data_integrity.gd` chặn nội dung hỏng (ví dụ đò
 ## 5. Công cụ debug (chỉ bản debug)
 
 - **F3**: overlay (FPS, node/orphan, state leader, phase ability, input gate…).
-- **` hoặc F1**: console. Gõ `help`. Có `spawn`, `give`, `xp`, `heal`, `hurt`, `god`, `tp`, `kill_all`, `map`, `save`, `load`, `timescale`, `hitboxes`, `palette xuan|thuc|none`, `enemies`, `items`.
+- **` hoặc F1**: console. Gõ `help`. Có `spawn`, `give`, `xp`, `heal`, `hurt`, `god`, `tp`, `kill_all`, `map`, `save`, `load`, `timescale`, `hitboxes`, `palette xuan|thuc|none`, `lang vi|en`, `tune`, `tune_save`, `enemies`, `items`, `abilities`.
 - **F5 / F9**: lưu / tải nhanh (autosave slot).
 - **Tự động hoá qua dòng lệnh** (để AI hoặc CI chụp màn hình, chơi thử theo kịch bản):
   ```
-  godot --path . -- "--exec=60:spawn wolf 3;god" "--press=120:attack,140:skill_1:0.1" \
+  # Truyền đường dẫn scene để vào thẳng game (bỏ qua màn hình tiêu đề):
+  godot --path . res://src/main.tscn -- "--exec=60:spawn wolf 3;god" "--press=120:attack,140:skill_1:0.1" \
         "--shots=200:user://shot.png" "--quit-at=240"
   ```
+  Số frame là process frame (FPS không khoá, ~120+), không phải giây.
 
 ## 6. Quy trình công cụ
 
@@ -144,6 +170,8 @@ godot --headless --path . -s res://tools/build_maps.gd
 ./run_tests.sh
 ```
 
+**CI**: `.github/workflows/tests.yml` tải Godot 4.7.2 Linux, import 2 lần, chạy GUT headless ở mỗi push/PR.
+
 ## 7. Chỗ gắn cho các milestone sau
 
 | Milestone GDD | Gắn vào đâu |
@@ -152,4 +180,5 @@ godot --headless --path . -s res://tools/build_maps.gd
 | Script Lite / Dialogue Manager | Thay/đặt cạnh `DialogueBox`; NPC vẫn chỉ phát `EventBus.dialogue_requested` |
 | Tuần Đêm (Patrol) | Map mới với palette `thuc` + `CharacterDef` "Vũ đời thực" (không skill, chậm) — dùng lại Actor/Intent |
 | gate_strain lên âm thanh | Hiệu ứng bus `Music` + `PaletteController` (đã có preset, thêm tham số) |
-| Chế độ Nhẹ Tay | `SettingsService` đã có key `gentle_mode` |
+| Chế độ Nhẹ Tay | `SettingsService` đã có key `gentle_mode` (bật từ cảnh báo nội dung hoặc Cài đặt) |
+| Rebind phím | `InputHints` đã đọc tên phím từ Input Map; chỉ cần UI ghi đè InputMap + lưu vào settings |

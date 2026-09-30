@@ -15,3 +15,7 @@ extends Resource
 @export var switch_cooldown: float = 1.0
 ## Camera shake multiplier when the party is the one getting hit.
 @export var shake_scale_when_party_hit: float = 1.6
+## How many enemies may be in Telegraph/Attack at the same time.
+@export var max_simultaneous_attackers: int = 2
+## Enemies closer than this push away from each other while chasing.
+@export var enemy_separation_radius: float = 22.0

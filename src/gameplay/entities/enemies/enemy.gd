@@ -35,6 +35,7 @@ func _ready() -> void:
 	add_to_group(&"enemies")
 	super()
 	home = global_position
+	state_machine.state_changed.connect(_on_state_changed)
 
 
 func _setup_actor() -> void:
@@ -111,6 +112,44 @@ func pick_ability() -> AbilityDef:
 
 func too_far_from_home() -> bool:
 	return global_position.distance_to(home) > def.leash_range
+
+
+# --- Attack tokens (AttackDirector) ---
+
+## True if this enemy may start an attack now. Without a director, always true.
+func request_attack_token() -> bool:
+	var director := AttackDirector.find(self)
+	return director == null or director.try_acquire(self)
+
+
+func release_attack_token() -> void:
+	var director := AttackDirector.find(self)
+	if director != null:
+		director.release(self)
+
+
+func _on_state_changed(_from: StringName, to: StringName) -> void:
+	if to != STATE_TELEGRAPH and to != STATE_ATTACK:
+		release_attack_token()
+
+
+func _exit_tree() -> void:
+	release_attack_token()
+
+
+## Push away from nearby enemies so groups surround the target instead of stacking.
+func separation() -> Vector2:
+	var radius := Registry.combat_config.enemy_separation_radius
+	var push := Vector2.ZERO
+	for node: Node in get_tree().get_nodes_in_group(&"enemies"):
+		var other := node as Node2D
+		if other == self or other == null:
+			continue
+		var offset := global_position - other.global_position
+		var d := offset.length()
+		if d > 0.01 and d < radius:
+			push += offset / d * (1.0 - d / radius)
+	return push
 
 
 # --- Reactions ---

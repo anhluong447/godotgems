@@ -14,3 +14,5 @@ downed_duration = 10.0
 revive_hp_ratio = 0.3
 switch_cooldown = 1.0
 shake_scale_when_party_hit = 1.6
+max_simultaneous_attackers = 2
+enemy_separation_radius = 22.0

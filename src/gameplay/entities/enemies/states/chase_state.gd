@@ -22,7 +22,13 @@ func physics_update(delta: float) -> void:
 	e.set_facing(dir)
 	var ability := e.pick_ability()
 	if ability != null:
-		transition_to(Enemy.STATE_TELEGRAPH, {"ability": ability})
+		if e.request_attack_token():
+			transition_to(Enemy.STATE_TELEGRAPH, {"ability": ability})
+			return
+		# Someone else is attacking: circle at a respectful distance and wait.
+		var wait_distance := maxf(ability.ai_range * 1.4, 48.0)
+		var toward := 1.0 if dist > wait_distance else -0.6
+		_move(e, (dir * toward + dir.orthogonal() * _strafe_sign).normalized(), STRAFE_SPEED)
 		return
 	var preferred := e.def.preferred_distance
 	if preferred > 0.0:
@@ -31,10 +37,14 @@ func physics_update(delta: float) -> void:
 			_strafe_t = randf_range(0.8, 1.6)
 			_strafe_sign = -_strafe_sign
 		if dist < preferred * 0.75:
-			e.movement.move(-dir)
+			_move(e, -dir)
 		elif dist > preferred * 1.15:
-			e.movement.move(dir)
+			_move(e, dir)
 		else:
-			e.movement.move(dir.orthogonal() * _strafe_sign, STRAFE_SPEED)
+			_move(e, dir.orthogonal() * _strafe_sign, STRAFE_SPEED)
 	else:
-		e.movement.move(dir)
+		_move(e, dir)
+
+
+func _move(e: Enemy, dir: Vector2, speed: float = 1.0) -> void:
+	e.movement.move((dir + e.separation() * 1.5).limit_length(1.0), speed)

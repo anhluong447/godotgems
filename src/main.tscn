@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://src/ui/menus/pause_menu.gd" id="11_pause"]
 [ext_resource type="Script" path="res://src/ui/debug/debug_overlay.gd" id="12_overlay"]
 [ext_resource type="Script" path="res://src/ui/debug/debug_console.gd" id="13_console"]
+[ext_resource type="Script" path="res://src/gameplay/world/attack_director.gd" id="14_director"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_palette"]
 shader = ExtResource("8_palette_shader")
@@ -46,6 +47,9 @@ script = ExtResource("5_camera")
 [node name="FeedbackDirector" type="Node" parent="." node_paths=PackedStringArray("fx_layer")]
 script = ExtResource("6_feedback")
 fx_layer = NodePath("../FxLayer")
+
+[node name="AttackDirector" type="Node" parent="."]
+script = ExtResource("14_director")
 
 [node name="PostFX" type="CanvasLayer" parent="."]
 layer = 5
